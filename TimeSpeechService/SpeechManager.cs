@@ -6,10 +6,11 @@ namespace TimeSpeechService
 {
     public static class SpeechManager
     {
-        private static DateTime time = DateTime.Now;
+        private static DateTime _time = DateTime.Now;
 
         public static void SayHour(object state)
         {
+            DateTime time = DateTime.Now;
             var synthesizer = new SpeechSynthesizer();
             var builder = new PromptBuilder();
             builder.StartVoice(new CultureInfo("ru-RU"));
@@ -26,8 +27,8 @@ namespace TimeSpeechService
 
         public static int GetNextHour()
         {
-            int currentTime = time.Hour * 3600000 + time.Minute * 60000 + time.Second * 1000;
-            int nextTime = time.AddHours(1).Hour * 3600000;
+            int currentTime = _time.Hour * 3600000 + _time.Minute * 60000 + _time.Second * 1000;
+            int nextTime = _time.AddHours(1).Hour * 3600000;
             return nextTime - currentTime;
         }
     }

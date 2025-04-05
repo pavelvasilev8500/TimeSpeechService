@@ -1,39 +1,29 @@
-﻿using System.ServiceProcess;
-using System.Threading;
+﻿using System;
+using System.ServiceProcess;
+using System.Timers;
 
 namespace TimeSpeechService
 {
     public partial class Service1 : ServiceBase
     {
-        private static TimerCallback _timerCallback = new TimerCallback(SpeechManager.SayHour);
-        private Timer _timer;
         public Service1()
         {
             InitializeComponent();
             CanStop = true;
             CanPauseAndContinue = true;
+            if(SoundCheck.IsAvalableSoundCard())
+            {
+                var timer = new Timer(1000);
+                timer.Elapsed += Timer_Elapsed;
+                timer.AutoReset = true;
+                timer.Start();
+            }
         }
 
-        protected override void OnStart(string[] args)
+        private void Timer_Elapsed(object sender, ElapsedEventArgs e)
         {
-            _timer = new Timer(_timerCallback, null, SpeechManager.GetNextHour(), 3600000);
-        }
-
-        protected override void OnStop()
-        {
-            _timer.Dispose();
-        }
-
-        protected override void OnPause()
-        {
-            base.OnPause();
-            _timer.Dispose();
-        }
-
-        protected override void OnContinue()
-        {
-            base.OnContinue();
-            _timer = new Timer(_timerCallback, null, SpeechManager.GetNextHour(), 3600000);
+            var dt = DateTime.Now;
+            SpeechManager.SayHour(dt);
         }
     }
 }

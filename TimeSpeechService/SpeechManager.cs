@@ -8,7 +8,7 @@ namespace TimeSpeechService
     {
         public static void SayHour(DateTime dt)
         {
-            if (dt.Minute == 0 || dt.Second == 0)
+            if (dt.Minute == 0 && dt.Second == 0)
             {
                 var synthesizer = new SpeechSynthesizer();
                 var builder = new PromptBuilder();
